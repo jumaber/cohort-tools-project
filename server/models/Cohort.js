@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const cohortSchema = new mongoose.Schema({
   cohortSlug: {
@@ -49,4 +49,4 @@ const cohortSchema = new mongoose.Schema({
 
 const Cohort = mongoose.model("Cohort", cohortSchema);
 
-export default Cohort;
+module.exports = Cohort;
