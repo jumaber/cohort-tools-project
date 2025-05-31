@@ -2,9 +2,10 @@ const express = require("express");
 const router = express.Router();
 const Student = require("../models/Student");
 
-// GET all students
+// GET all students with populated cohort data
 router.get("/", (req, res) => {
   Student.find()
+    .populate("cohort")
     .then(students => res.json(students))
     .catch(err => res.status(500).json({ message: "Error fetching students 😬", error: err }));
 });
@@ -16,20 +17,22 @@ router.post("/", (req, res) => {
     .catch(err => res.status(400).json({ message: "Error creating student 😢", error: err }));
 });
 
-// GET students by cohort ID
+// GET students by cohort ID with populated cohort data
 router.get("/cohort/:cohortId", (req, res) => {
   const { cohortId } = req.params;
 
   Student.find({ cohort: cohortId })
+    .populate("cohort")
     .then(students => res.json(students))
     .catch(err => res.status(500).json({ message: "Error fetching students by cohort 😓", error: err }));
 });
 
-// GET one student by ID
+// GET one student by ID with populated cohort data
 router.get("/:studentId", (req, res) => {
   const { studentId } = req.params;
 
   Student.findById(studentId)
+    .populate("cohort")
     .then(student => {
       if (!student) return res.status(404).json({ message: "Student not found" });
       res.json(student);
