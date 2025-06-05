@@ -44,3 +44,43 @@ app.use("/api/students", studentRoutes);
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
+
+// ERROR HANDLING
+app.use((err, req, res, next) => {
+  console.error(`[ERROR] ${err.name}: ${err.message}`);
+
+  // ValidationError: usually means required fields were missing or typed wrong
+  if (err.name === "ValidationError") {
+    return res.status(400).json({
+      message:
+        "It looks like something is missing or not quite right in the data you sent. Double-check your fields and try again 😊",
+      details: err.message,
+    });
+  }
+
+  // CastError: usually means the ID in the URL is not the right format
+  if (err.name === "CastError") {
+    return res.status(400).json({
+      message:
+        "Hmm... the ID you provided doesn’t look valid. It should look like a long string of letters and numbers 🧩",
+      details: err.message,
+    });
+  }
+
+  // NotFoundError: a custom one you can throw when an item isn't found
+  if (err.name === "NotFoundError") {
+    return res.status(err.status).json({
+      message:
+        "We couldn’t find what you were looking for. Maybe the ID is wrong, or the item was deleted 🧐",
+      details: err.message,
+    });
+  }
+
+  // All other errors
+  res.status(500).json({
+    message:
+      "Something went wrong on the server — don’t worry, it’s not your fault! (sure) 😅",
+    ...(process.env.NODE_ENV === "development" && { details: err.stack }),
+  });
+});
+
