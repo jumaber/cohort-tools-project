@@ -3,53 +3,58 @@ const router = express.Router();
 const Cohort = require("../models/Cohort");
 
 // GET all cohorts
-router.get("/", (req, res) => {
+router.get("/", (req, res, next) => {
   Cohort.find()
-    .then(cohorts => res.json(cohorts))
-    .catch(err => res.status(500).json({ message: "Error fetching cohorts 😬", error: err }));
+    .then((cohorts) => res.json(cohorts))
+    .catch(next);
 });
 
 // POST new cohort
-router.post("/", (req, res) => {
+router.post("/", (req, res, next) => {
   Cohort.create(req.body)
-    .then(newCohort => res.status(201).json(newCohort))
-    .catch(err => res.status(400).json({ message: "Error creating cohort 😢", error: err }));
+    .then((newCohort) => res.status(201).json(newCohort))
+    .catch(next);
 });
 
 // GET cohort by ID
-router.get("/:cohortId", (req, res) => {
+router.get("/:cohortId", (req, res, next) => {
   const { cohortId } = req.params;
 
   Cohort.findById(cohortId)
-    .then(cohort => {
+    .then((cohort) => {
       if (!cohort) return res.status(404).json({ message: "Cohort not found" });
       res.json(cohort);
     })
-    .catch(err => res.status(500).json({ message: "Error fetching cohort 😓", error: err }));
+    .catch(next);
 });
 
 // UPDATE cohort
-router.put("/:cohortId", (req, res) => {
+router.put("/:cohortId", (req, res, next) => {
   const { cohortId } = req.params;
 
-  Cohort.findByIdAndUpdate(cohortId, req.body, { new: true, runValidators: true })
-    .then(updatedCohort => {
-      if (!updatedCohort) return res.status(404).json({ message: "Cohort not found" });
+  Cohort.findByIdAndUpdate(cohortId, req.body, {
+    new: true,
+    runValidators: true,
+  })
+    .then((updatedCohort) => {
+      if (!updatedCohort)
+        return res.status(404).json({ message: "Cohort not found" });
       res.json(updatedCohort);
     })
-    .catch(err => res.status(400).json({ message: "Error updating cohort 😓", error: err }));
+    .catch(next);
 });
 
 // DELETE cohort
-router.delete("/:cohortId", (req, res) => {
+router.delete("/:cohortId", (req, res, next) => {
   const { cohortId } = req.params;
 
   Cohort.findByIdAndDelete(cohortId)
-    .then(deletedCohort => {
-      if (!deletedCohort) return res.status(404).json({ message: "Cohort not found" });
+    .then((deletedCohort) => {
+      if (!deletedCohort)
+        return res.status(404).json({ message: "Cohort not found" });
       res.json({ message: "Cohort deleted successfully" });
     })
-    .catch(err => res.status(500).json({ message: "Error deleting cohort 😓", error: err }));
+    .catch(next);
 });
 
 module.exports = router;
