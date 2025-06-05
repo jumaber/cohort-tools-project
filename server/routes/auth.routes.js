@@ -1,7 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const User = require("../models/User.model"); // Mongoose model for the User
+const User = require("../models/User"); // Mongoose model for the User
 const { isAuthenticated } = require("./../middleware/jwt.middleware.js"); // Middleware to protect routes
 const router = express.Router();
 const saltRounds = 10; // Number of salt rounds for bcrypt hashing

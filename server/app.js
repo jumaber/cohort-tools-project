@@ -1,3 +1,4 @@
+require("dotenv/config");
 const express = require("express");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
@@ -8,6 +9,7 @@ const { isAuthenticated } = require("./middleware/jwt.middleware");
 // IMPORT ROUTES
 const cohortRoutes = require("./routes/cohorts");
 const studentRoutes = require("./routes/students");
+const authRoutes = require("./routes/auth.routes");
 
 // DEFINE PORT
 const PORT = 5005;
@@ -40,6 +42,7 @@ app.get("/docs", (req, res) => {
 // USE ROUTES FROM ROUTES FOLDER AND USE JTW MIDDLEWARE TO PROTECT THE ROUTES
 app.use("/api/cohorts", isAuthenticated, cohortRoutes);
 app.use("/api/students", isAuthenticated, studentRoutes);
+app.use("/auth", authRoutes);
 
 // START SERVER
 app.listen(PORT, () => {
