@@ -3,7 +3,7 @@ const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const mongoose = require('mongoose');
-const { isAuthenticated } = require("./middleware/authMiddleware");
+const { isAuthenticated } = require("./middleware/jwt.middleware");
 
 // IMPORT ROUTES
 const cohortRoutes = require("./routes/cohorts");
