@@ -3,6 +3,7 @@ const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const mongoose = require('mongoose');
+const { isAuthenticated } = require("./middleware/authMiddleware");
 
 // IMPORT ROUTES
 const cohortRoutes = require("./routes/cohorts");
@@ -36,9 +37,9 @@ app.get("/docs", (req, res) => {
   res.sendFile(__dirname + "/views/docs.html");
 });
 
-// USE ROUTES FROM ROUTES FOLDER
-app.use("/api/cohorts", cohortRoutes);
-app.use("/api/students", studentRoutes);
+// USE ROUTES FROM ROUTES FOLDER AND USE JTW MIDDLEWARE TO PROTECT THE ROUTES
+app.use("/api/cohorts", isAuthenticated, cohortRoutes);
+app.use("/api/students", isAuthenticated, studentRoutes);
 
 // START SERVER
 app.listen(PORT, () => {
